@@ -52,10 +52,16 @@ class IndexModule:
             self.data_list = f.read().split('\n')
             self.data_n = len(self.data_list)
 
+        # write DATA_N to config
+        self.config.set('DEFAULT', 'DATA_N', str(self.data_n))
+        with open(self.config_path, 'w', encoding='utf-8') as f:
+            self.config.write(f)
+
     def write_index_to_db(self, index, table_name):
         """
         write inverted index to db
         index in form of # form: {term: [df, [posting, ...]], ...}
+        :param table_name:
         :param index:
         :return:
         """
