@@ -142,7 +142,6 @@ class RetrievalModule:
                 rid, tf, length = posting.split('\t')
                 rid = int(rid)
                 tf = int(tf)
-                length = int(length)
                 s = (1 + math.log(tf)) * idf * tf_dict[term]
                 if rid in tfidf_scores:
                     tfidf_scores[rid] = tfidf_scores[rid] + s
