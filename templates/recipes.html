@@ -1,0 +1,99 @@
+{% extends 'public.html' %}
+{% block content %}
+
+        <div class="sp" style="padding-top: 30px; padding-bottom: 30px">
+            <div class="container">
+                <div class="row" style="margin-bottom: 20px; display: flex; align-items: center">
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <input class="form-control" id="keys" type="text" placeholder="I want to make...">
+                            <span class="input-group-btn">
+                                <input class="btn btn-default" id="search" type="submit" value="Search">
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2" style="display: flex; align-items: center">
+                        <input type="checkbox" id="is_title" style="margin: 0px"><span>&nbsp;Search for title</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-5">
+                        <input class="form-control" id="ingredients" type="text" placeholder="Ingredients">
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <input class="form-control" id="time_left" type="text" placeholder="From Time Cost">
+                            </div>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="time_right" type="text" placeholder="To Time Cost">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-area-2 sp">
+            <div class="container" id="search-results">
+
+            </div>
+        </div>
+
+{% endblock %}
+{% block jscode %}
+
+    <script>
+    $("#search").on("click", function () {
+        var keys = $("#keys").val();
+        var is_title = $("#is_title").prop("checked");
+        var ingredients = $("#ingredients").val();
+        var time_left = $("#time_left").val();
+        var time_right = $("#time_right").val();
+
+        if ($.trim(time_left).length != 0) {
+            if ($.isNumeric(time_left) == false) {
+                alert("Please input the correct number!")
+            }
+            if (parseInt(time_left) <= 0) {
+                alert("Please input the correct number!")
+            }
+        }
+
+        if ($.trim(time_right).length != 0) {
+            if ($.isNumeric(time_right) == false) {
+                alert("Please input the correct number!")
+            }
+            if (parseInt(time_right) <= 0) {
+                alert("Please input the correct number!")
+            }
+        }
+
+        if (is_title && $.trim(keys).length == 0) {
+            alert("Please specify the title!")
+        } else if ($.trim(keys).length == 0 && $.trim(ingredients).length == 0) {
+            alert("Try to search something!")
+        } else {
+            var data = {
+                data: JSON.stringify({
+                    "is_title": is_title,
+                    "keys": keys,
+                    "ingredients": ingredients,
+                    "time_left": time_left,
+                    "time_right": time_right
+                })
+            };
+
+            $.ajax({
+                url: "/results",
+                type: "post",
+                data: data,
+                success: function (response) {
+                    $("#search-results").html(response)
+                }
+            });
+        }
+    })
+    </script>
+
+{% endblock %}

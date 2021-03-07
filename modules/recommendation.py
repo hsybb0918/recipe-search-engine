@@ -3,12 +3,10 @@
 # @Time        : 04 March, 2021
 # @Author      : Cyan
 import configparser
-import json
 import re
 import sqlite3
 
 from datetime import datetime
-from gensim import corpora, models, similarities
 from porter2stemmer import Porter2Stemmer
 from scipy.sparse import dok_matrix
 from sklearn.neighbors import NearestNeighbors
@@ -40,12 +38,12 @@ class RecommendationModule:
         with open(self.config['DEFAULT']['STOPWORDS_PATH'], encoding='utf-8') as f:
             self.stop_words = set(f.read().split())
 
-        with open(self.config['DEFAULT']['RECIPES_PATH'], encoding='utf-8') as f:
-            self.data_list = f.read().split('\n')
-            self.data_n = len(self.data_list)
-
         self.conn = sqlite3.connect(self.config['DEFAULT']['SE_DB_PATH'])
+        self.conn.row_factory = sqlite3.Row
         c = self.conn.cursor()
+        self.data_list = c.execute('select * from recipes').fetchall()
+        self.data_n = len(self.data_list)
+
         c.execute('drop table if exists k_nearest')
         c.execute('create table k_nearest (id integer primary key, '
                   'nn1 integer, nn2 integer, nn3 integer, nn4 integer, nn5 integer)')
@@ -103,8 +101,7 @@ class RecommendationModule:
         construct vocabulary with only title
         :return:
         """
-        for x in self.data_list:
-            recipe = json.loads(x)
+        for recipe in self.data_list:
             name = recipe['name']
             # ingredients = recipe['ingredients']
 
@@ -143,8 +140,7 @@ class RecommendationModule:
         matrix_size = (self.data_n, len(word2id))
         X = dok_matrix(matrix_size)
 
-        for i, x in enumerate(self.data_list):
-            recipe = json.loads(x)
+        for i, recipe in enumerate(self.data_list):
             rid = recipe['id']
             name = recipe['name']
 

@@ -1,0 +1,56 @@
+{% extends 'public.html' %}
+{% block content %}
+
+        <div class="page-title sp" style="background-image: url(/img/page-title.jpg); padding: 40px 0">
+            <div class="container text-center">
+                <h2 style="margin: 20px 0">{{ re['name'] }}</h2>
+                <p style="margin-bottom: 10px">
+                    Rating Star: {{ re['rating_star'] }}
+                    Rating Score: {{ re['rating_score'] }}
+                    (<a href="{{ re['record_url'] }}#activity-feed" target="_blank">{{ re['rating_num'] }}</a>)
+                    Total Time: {{ re['total_time'] }}
+                </p>
+                <p style="margin-bottom: 30px">{{ re['description'] }}</p>
+                <a class="button" href="{{ re['record_url'] }}" target="_blank" style="text-align: center">VIEW MORE IN FOOD.COM</a>
+            </div>
+        </div>
+
+        <div class="faq-area-2 sp">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3>Ingredients:</h3>
+                        <div class="single-faq" style="padding: 10px; margin: 10px 0">
+                            <p style="margin: 5px 0">{{ re['ingredients'] }}</p>
+                        </div>
+                        <div class="single-faq" style="padding: 10px; margin: 10px 0">
+                            <img src="{{ re['photo_url'] }}" alt="{{ re['name'] }}" style="object-fit:cover; height: 600px; width: 800px">
+                        </div>
+                        <h3>Steps:</h3>
+                        <div class="single-faq" style="padding: 10px; margin: 10px 0">
+                        {% for step in re['steps'].split('\n') %}
+                            <p style="margin: 5px 0">{{ step }}</p>
+                        {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <h3>You may also like:</h3>
+                        {% for re in res %}
+                        <div class="faq-sidebar-wrap" style="padding: 10px; margin: 10px 0">
+                            <ul class="faq-sidebar">
+                                <a href="/recipe/{{ re['id'] }}" target="_blank">
+                                    <div class="team-img">
+                                        <img src="{{ re['photo_url'] }}" alt="{{ re['name'] }}" style="object-fit:cover; height: 180px; width: 800px">
+                                    </div>
+                                    <h4 style="margin-bottom: 0; text-align: center">{{ re['name'] | truncate(50) }}</h4>
+                                </a>
+                            </ul>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

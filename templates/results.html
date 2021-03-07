@@ -1,0 +1,69 @@
+{% if res != None %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div style="height: 50px; display: flex; align-items: center">
+                <ul class="pagination" style="margin: auto">
+                    <li><a href="#" aria-label="previous">
+                            <span aria-hidden="true">&laquo;</span>
+                    </a></li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li><a href="#">
+                            <span aria-hidden="true">&raquo;</span>
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-12">
+            {% for re in res %}
+            <div class="single-faq" style="margin: 10px 0; padding: 10px">
+                <div class="row" style="display: flex; align-items: center">
+                    <div class="col-md-3">
+                        <a href="\recipe\{{ re['id'] }}" target="_blank">
+                            <img src="{{ re['photo_url'] }}" alt="{{ re['name'] }}" style="object-fit:cover; height: 160px; width: 1000px; max-width: 100%">
+                        </a>
+                    </div>
+                    <div class="col-md-9">
+                        <a href="\recipe\{{ re['id'] }}" target="_blank">
+                            <h2>{{ re['name'] }}</h2>
+                        </a>
+                        <p>
+                            Rating Star: {{ re['rating_star'] }}
+                            Rating Score: {{ re['rating_score'] }}
+                            (<a href="{{ re['record_url'] }}#activity-feed" target="_blank">{{ re['rating_num'] }}</a>)
+                            Total Time: {{ re['total_time'] }}
+                        </p>
+                        <p>{{ re['description'] |truncate(220) }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-sm-12">
+            <div style="height: 50px; display: flex; align-items: center">
+                <ul class="pagination" style="margin: auto">
+                    <li><a href="#" aria-label="previous">
+                            <span aria-hidden="true">&laquo;</span>
+                    </a></li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li><a href="#">
+                            <span aria-hidden="true">&raquo;</span>
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endif %}
+
+{% if res == None %}
+    <h4>No result.</h4>
+{% endif %}

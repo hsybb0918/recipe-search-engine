@@ -6,11 +6,11 @@ from recipespiders.items import RecipespidersItem
 class RecipeSpider(scrapy.Spider):
     name = 'recipe'
 
-    start_urls = ['https://api.food.com/external/v1/nlp/search?pn=2']
+    start_urls = ['https://api.food.com/external/v1/nlp/search?pn=16800']
     base_url = 'https://api.food.com/external/v1/nlp/search?pn=%d'
-    page_num = 3
+    page_num = 16801
 
-    recipe_count = 0
+    recipe_count = 166121
 
     def parse_detail(self, response):
         """
@@ -66,13 +66,17 @@ class RecipeSpider(scrapy.Spider):
 
                 item['total_time'] = int(recipe['recipe_totaltime'])
 
-                item['photo_url'] = recipe['recipe_photo_url']
+                if recipe.get('recipe_photo_url') is None:
+                    continue
+                else:
+                    item['photo_url'] = recipe['recipe_photo_url']
+
                 item['record_url'] = recipe['record_url']
 
                 yield scrapy.Request(url=recipe['record_url'], callback=self.parse_detail, meta={'item': item})
 
         # process remaining pages
-        if self.page_num <= 22000:
+        if self.page_num <= 21000:
             print(self.page_num)
             new_url = format(self.base_url % self.page_num)
             self.page_num += 1

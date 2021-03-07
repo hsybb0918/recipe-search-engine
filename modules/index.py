@@ -3,7 +3,6 @@
 # @Time        : 04 March, 2021
 # @Author      : Cyan
 import configparser
-import json
 import re
 import sqlite3
 from datetime import datetime
@@ -37,6 +36,8 @@ class IndexModule:
     config_path = None
     config = None
 
+    conn = None
+
     def __init__(self):
         """
         init config, stop words, data list
@@ -48,14 +49,23 @@ class IndexModule:
         with open(self.config['DEFAULT']['STOPWORDS_PATH'], encoding='utf-8') as f:
             self.stop_words = set(f.read().split())
 
-        with open(self.config['DEFAULT']['RECIPES_PATH'], encoding='utf-8') as f:
-            self.data_list = f.read().split('\n')
-            self.data_n = len(self.data_list)
+        self.conn = sqlite3.connect(self.config['DEFAULT']['SE_DB_PATH'])
+        self.conn.row_factory = sqlite3.Row
+        c = self.conn.cursor()
+        self.data_list = c.execute('select * from recipes').fetchall()
+        self.data_n = len(self.data_list)
 
         # write DATA_N to config
         self.config.set('DEFAULT', 'DATA_N', str(self.data_n))
         with open(self.config_path, 'w', encoding='utf-8') as f:
             self.config.write(f)
+
+    def __del__(self):
+        """
+        close the database
+        :return:
+        """
+        self.conn.close()
 
     def write_index_to_db(self, index, table_name):
         """
@@ -104,7 +114,7 @@ class IndexModule:
                         tf_dict[term] = 1
         return n, tf_dict
 
-    def construct_index_name_desc(self):
+    def construct_index_name_desc_ing(self):
         """
         construct inverted index with name and description
         :return:
@@ -112,13 +122,13 @@ class IndexModule:
         inverted_index = {}  # form: {term: [df, [posting, ...]], ...}
         AVG_LEN = 0  # average length for name and description
 
-        for x in self.data_list:
-            recipe = json.loads(x)
+        for recipe in self.data_list:
             rid = recipe['id']
             name = recipe['name']
             description = recipe['description']
+            ingredients = recipe['ingredients']
 
-            length, term_tf = self.data_cleanup_tf(name + ' ' + description)
+            length, term_tf = self.data_cleanup_tf(name + ' ' + description + ' ' + ingredients)
             AVG_LEN += length
             for term, tf in term_tf.items():
                 posting = Posting(rid, tf, length)
@@ -136,7 +146,7 @@ class IndexModule:
         with open(self.config_path, 'w', encoding='utf-8') as f:
             self.config.write(f)
 
-        self.write_index_to_db(inverted_index, 'index_name_desc')
+        self.write_index_to_db(inverted_index, 'index_name_desc_ing')
 
     def construct_index_name(self):
         """
@@ -145,8 +155,7 @@ class IndexModule:
         """
         inverted_index = {}  # form: {term: [df, [posting, ...]], ...}
 
-        for x in self.data_list:
-            recipe = json.loads(x)
+        for recipe in self.data_list:
             rid = recipe['id']
             name = recipe['name']
 
@@ -169,8 +178,7 @@ class IndexModule:
         """
         inverted_index = {}  # form: {term: [df, [posting, ...]], ...}
 
-        for x in self.data_list:
-            recipe = json.loads(x)
+        for recipe in self.data_list:
             rid = recipe['id']
             ing = recipe['ingredients']
 
@@ -189,7 +197,7 @@ class IndexModule:
 if __name__ == '__main__':
     print('-----start time: %s-----' % (datetime.today()))
     im = IndexModule()
-    im.construct_index_name_desc()
+    im.construct_index_name_desc_ing()
     im.construct_index_name()
     im.construct_index_ingredient()
     print('-----finish time: %s-----' % (datetime.today()))

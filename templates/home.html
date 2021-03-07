@@ -1,0 +1,199 @@
+{% extends 'public.html' %}
+{% block content %}
+
+        <div class="hero-slider">
+            <div class="single-slide" style="background-image: url(/img/slide1.jpg)">
+                <div class="inner">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="slide-content">
+                                    <h2>Recipe Search Engine.</h2>
+                                    <p>Search what you like and satisfy your stomach.</p>
+                                    <div class="slide-btn">
+                                        <a href="/recipes" class="button" style="width: 120px; text-align: center">Search Now</a>
+                                        <a href="/about" class="button-2" style="width: 120px; text-align: center">About Us</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-area sp">
+            <div class="container">
+                <div class="row">
+                    {% for foo in re %}
+                    <div class="col-sm-6 col-md-4 col-lg-3 single-team" style="padding: 10px">
+                        <div class="inner">
+                            <a href="\recipe\{{ foo['id'] }}" target="_blank">
+                                <div class="team-img">
+                                    <img src="{{ foo['photo_url'] }}" alt="{{ foo['name'] }}" style="object-fit:cover; height: 300px; width: 800px">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="service-area bg2 sp">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Our Characteristics</h2>
+                    <p>Write something.</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 single-service">
+                        <div class="inner">
+                            <div class="title">
+                                <div class="icon">
+                                    <i class="fa fa-film"></i>
+                                </div>
+                                <h4>Video Making</h4>
+                            </div>
+                            <div class="content">
+                                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 single-service">
+                        <div class="inner">
+                            <div class="title">
+                                <div class="icon">
+                                    <i class="fa fa-camera"></i>
+                                </div>
+                                <h4>Photography</h4>
+                            </div>
+                            <div class="content">
+                                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 single-service">
+                        <div class="inner">
+                            <div class="title">
+                                <div class="icon">
+                                    <i class="fa fa-music"></i>
+                                </div>
+                                <h4>Music Composing</h4>
+                            </div>
+                            <div class="content">
+                                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 single-service">
+                        <div class="inner">
+                            <div class="title">
+                                <div class="icon">
+                                    <i class="fa fa-bullhorn"></i>
+                                </div>
+                                <h4>Product Marketing</h4>
+                            </div>
+                            <div class="content">
+                                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 single-service">
+                        <div class="inner">
+                            <div class="title">
+                                <div class="icon">
+                                    <i class="fa fa-magic"></i>
+                                </div>
+                                <h4>Video Editing</h4>
+                            </div>
+                            <div class="content">
+                                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 single-service">
+                        <div class="inner">
+                            <div class="title">
+                                <div class="icon">
+                                    <i class="fa fa-bar-chart"></i>
+                                </div>
+                                <h4>Presentation</h4>
+                            </div>
+                            <div class="content">
+                                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="testimonial-area sp">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Our team</h2>
+                    <p>Write something.</p>
+                </div>
+                <div class="testimonial-slider bordered">
+                    <div class="single-slide">
+                        <div class="inner">
+                            <p>When I was just starting 6th grade I got my first job. Paperboy! Boy, was I excited. At that time I had spent a lot of time actually playing the video official.</p>
+                            <div class="client-info">
+                                <div class="client-img">
+                                    <img src="/img/client.jpg" alt="client">
+                                </div>
+                                <div class="client-data">
+                                    <h4>Yefei Chen</h4>
+                                    <span>Data collection</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-slide">
+                        <div class="inner">
+                            <p>When I was just starting 6th grade I got my first job. Paperboy! Boy, was I excited. At that time I had spent a lot of time actually playing the video official.</p>
+                            <div class="client-info">
+                                <div class="client-img">
+                                    <img src="/img/client.jpg" alt="client">
+                                </div>
+                                <div class="client-data">
+                                    <h4>Cyan Hou</h4>
+                                    <span>Coding</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-slide">
+                        <div class="inner">
+                            <p>When I was just starting 6th grade I got my first job. Paperboy! Boy, was I excited. At that time I had spent a lot of time actually playing the video official.</p>
+                            <div class="client-info">
+                                <div class="client-img">
+                                    <img src="/img/client.jpg" alt="client">
+                                </div>
+                                <div class="client-data">
+                                    <h4>Chuqiang Lin</h4>
+                                    <span>UX</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-slide">
+                        <div class="inner">
+                            <p>When I was just starting 6th grade I got my first job. Paperboy! Boy, was I excited. At that time I had spent a lot of time actually playing the video official.</p>
+                            <div class="client-info">
+                                <div class="client-img">
+                                    <img src="/img/client.jpg" alt="client">
+                                </div>
+                                <div class="client-data">
+                                    <h4>Xiaohan Liu</h4>
+                                    <span>Management</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

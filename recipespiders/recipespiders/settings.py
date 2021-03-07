@@ -66,7 +66,8 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'recipespiders.pipelines.RecipespidersPipeline': 300,
+   # 'recipespiders.pipelines.RecipeMongoDBPipeline': 300,
+   'recipespiders.pipelines.RecipeSQLitePipeline': 300,
 }
 
 # Configuration of MongoDB

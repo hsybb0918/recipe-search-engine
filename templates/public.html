@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Recipe Search Engine</title>
+
+    <!-- Required CSS files -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="/css/owl.carousel.css">
+    <link rel="stylesheet" href="/css/barfiller.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/slicknav.css">
+    <link rel="stylesheet" href="/css/main.css">
+
+    <style type="text/css">
+        .sp {
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+        .spt {
+            padding-top: 40px;
+        }
+        .spb {
+            padding-bottom: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preloader">
+        <span class="preloader-spin"></span>
+    </div>
+
+    <div class="site">
+
+        <header>
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 col-sm-3 logo-column">
+                        <a href="/" class="logo">
+                            <img src="/img/logo.png" alt="logo">
+                        </a>
+                    </div>
+                    <div class="col-6 col-sm-9 nav-column clearfix">
+                        <div class="right-nav">
+                            <span class="search-icon fa fa-search"></span>
+                            <form action="#" class="search-form">
+                                <input type="search" placeholder="I want to make...">
+                                <button type="submit"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                        <nav id="menu" class="d-none d-lg-block">
+                            <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/about">About</a></li>
+                                <li><a href="/recipes">Recipes</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        {% block content %}
+        
+        {% endblock %}
+
+        <footer>
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="copyright-txt">
+                                ©
+                                <script type="text/javascript">
+                                    document.write((new Date()).getFullYear())
+                                </script>
+                                All Rights Reserved.
+                                <a href="https://github.com/hsybb0918/recipe-search-engine" target="_blank" style="padding-left: 0px; padding-right: 0px">
+                                    GitHub Source Page.
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 text-right">
+                            <div class="footer-nav">
+                                <a href="/">Home</a>
+                                <a href="/about">About</a>
+                                <a href="/recipes">Recipes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!--Required JS files-->
+    <script src="/js/vendor/jquery-2.2.4.min.js"></script>
+    <script src="/js/vendor/popper.min.js"></script>
+    <script src="/js/vendor/bootstrap.min.js"></script>
+    <script src="/js/vendor/owl.carousel.min.js"></script>
+    <script src="/js/vendor/isotope.pkgd.min.js"></script>
+    <script src="/js/vendor/slicknav.min.js"></script>
+    <script src="/js/active.js"></script>
+
+    {% block jscode %}
+
+    {% endblock %}
+</body>
+
+</html>

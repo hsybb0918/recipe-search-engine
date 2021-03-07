@@ -29,7 +29,7 @@ class RetrievalModule:
         """
         init the variables
         """
-        self.config_path = 'config.ini'
+        self.config_path = '../modules/config.ini'
         self.config = configparser.ConfigParser()
         self.config.read(self.config_path, 'utf-8')
 
@@ -95,7 +95,7 @@ class RetrievalModule:
 
         bm25_scores = {}
         for term in tf_dict.keys():
-            r = self.fetch_from_db(term, 'index_name_desc')
+            r = self.fetch_from_db(term, 'index_name_desc_ing')
             if r is None:
                 continue
             df = r[1]
@@ -115,11 +115,13 @@ class RetrievalModule:
 
         bm25_scores = sorted(bm25_scores.items(), key=operator.itemgetter(1))
         bm25_scores.reverse()
-        # print(bm25_scores)
-        if len(bm25_scores) == 0:
+
+        result = [x[0] for x in bm25_scores]
+        # print(len(bm25_scores), len(result))
+        if len(result) == 0:
             return 0, []
         else:
-            return 1, bm25_scores
+            return 1, result
 
     def result_by_tfidf(self, query):
         """
@@ -150,13 +152,21 @@ class RetrievalModule:
 
         tfidf_scores = sorted(tfidf_scores.items(), key=operator.itemgetter(1))
         tfidf_scores.reverse()
-        print(tfidf_scores)
-        if len(tfidf_scores) == 0:
+
+        result = [x[0] for x in tfidf_scores]
+        # print(len(tfidf_scores), len(result))
+        if len(result) == 0:
             return 0, []
         else:
-            return 1, tfidf_scores
+            return 1, result
 
     def search(self, query, sort_type):
+        """
+
+        :param query:
+        :param sort_type:
+        :return:
+        """
         if sort_type == 0:  # search for all text
             return self.result_by_bm25(query)
         elif sort_type == 1:  # search for title
@@ -167,5 +177,5 @@ if __name__ == "__main__":
     print('-----start time: %s-----' % (datetime.today()))
     rm = RetrievalModule()
     flag, rs = rm.search('meatloaf garlic', 1)
-    print(rs[:10])
+    print(rs)
     print('-----finish time: %s-----' % (datetime.today()))
