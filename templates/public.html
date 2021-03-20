@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/slicknav.css">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <link rel="stylesheet" href="/css/mdsp-css.min.css">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <style type="text/css">
         .sp {
@@ -39,21 +43,12 @@
     <div class="site">
 
         <header>
+
             <div class="container">
                 <div class="row">
-                    <div class="col-6 col-sm-3 logo-column">
-                        <a href="/" class="logo">
-                            <img src="/img/logo.png" alt="logo">
-                        </a>
-                    </div>
+                    <div class="col-6 col-sm-3 logo-column"></div>
                     <div class="col-6 col-sm-9 nav-column clearfix">
-                        <div class="right-nav">
-                            <span class="search-icon fa fa-search"></span>
-                            <form action="#" class="search-form">
-                                <input type="search" placeholder="I want to make...">
-                                <button type="submit"><i class="fa fa-search"></i></button>
-                            </form>
-                        </div>
+                        <div class="right-nav"></div>
                         <nav id="menu" class="d-none d-lg-block">
                             <ul>
                                 <li><a href="/">Home</a></li>
@@ -64,10 +59,11 @@
                     </div>
                 </div>
             </div>
+
         </header>
 
         {% block content %}
-        
+
         {% endblock %}
 
         <footer>
@@ -90,7 +86,7 @@
                             <div class="footer-nav">
                                 <a href="/">Home</a>
                                 <a href="/about">About</a>
-                                <a href="/recipes">Recipes</a>
+                                <a href="/recipes" style="padding-right: 0">Recipes</a>
                             </div>
                         </div>
                     </div>
@@ -108,6 +104,8 @@
     <script src="/js/vendor/isotope.pkgd.min.js"></script>
     <script src="/js/vendor/slicknav.min.js"></script>
     <script src="/js/active.js"></script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     {% block jscode %}
 

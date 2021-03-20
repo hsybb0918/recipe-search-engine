@@ -8,7 +8,7 @@ from sqlalchemy import MetaData
 
 def dbconnect():
     """
-
+    get the database connection
     :return:
     """
     from app import db

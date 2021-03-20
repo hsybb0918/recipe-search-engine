@@ -1,14 +1,18 @@
 {% extends 'public.html' %}
 {% block content %}
 
-        <div class="page-title sp" style="background-image: url(/img/page-title.jpg); padding: 40px 0">
+        <div class="page-title sp" style="background-image: url(/img/page-title.jpg); background-size: 100% 100%; padding: 40px 0 60px 0;">
             <div class="container text-center">
                 <h2 style="margin: 20px 0">{{ re['name'] }}</h2>
-                <p style="margin-bottom: 10px">
-                    Rating Star: {{ re['rating_star'] }}
-                    Rating Score: {{ re['rating_score'] }}
+                <p style="margin: 0; display: flex; align-items: center; justify-content: center">
+                    <b>Rating Star:</b>&nbsp;<img src="/img/star{{ re['rating_star'] }}.png" width="100px" height="20px">
+                </p>
+                <p style="margin: 0">
+                    <b>Rating Score:</b>&nbsp;{{ re['rating_score'] }}
                     (<a href="{{ re['record_url'] }}#activity-feed" target="_blank">{{ re['rating_num'] }}</a>)
-                    Total Time: {{ re['total_time'] }}
+                </p>
+                <p style="margin: 0">
+                    <b>Time:</b>&nbsp;{{ re['total_time'] }} mins
                 </p>
                 <p style="margin-bottom: 30px">{{ re['description'] }}</p>
                 <a class="button" href="{{ re['record_url'] }}" target="_blank" style="text-align: center">VIEW MORE IN FOOD.COM</a>
@@ -43,7 +47,7 @@
                                     <div class="team-img">
                                         <img src="{{ re['photo_url'] }}" alt="{{ re['name'] }}" style="object-fit:cover; height: 180px; width: 800px">
                                     </div>
-                                    <h4 style="margin-bottom: 0; text-align: center">{{ re['name'] | truncate(50) }}</h4>
+                                    <h4 style="margin-bottom: 0; text-align: center">{{ re['name'] | truncate(35) }}</h4>
                                 </a>
                             </ul>
                         </div>

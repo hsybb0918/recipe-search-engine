@@ -62,3 +62,22 @@ class Recipes(dbbase):
         rand = [random.randint(1, count) for _ in range(num)]
         rows = dbsession.query(Recipes).filter(Recipes.id.in_(rand)).all()
         return rows
+
+    def find_by_name_fuzzy(self, r_name):
+        """
+
+        :param r_name:
+        :return:
+        """
+        rows = dbsession.query(Recipes).filter(Recipes.name.like('%{keyword}%'.format(keyword=r_name))).limit(5)
+        return rows
+
+    def to_json(self):
+        """
+
+        :return:
+        """
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        return dict
