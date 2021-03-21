@@ -8,7 +8,7 @@
                     <b>Rating Star:</b>&nbsp;<img src="/img/star{{ re['rating_star'] }}.png" width="100px" height="20px">
                 </p>
                 <p style="margin: 0">
-                    <b>Rating Score:</b>&nbsp;{{ re['rating_score'] }}
+                    <b>Rating Score:</b>&nbsp;{{ '%0.2f' | format(re['rating_score'] | float) }}
                     (<a href="{{ re['record_url'] }}#activity-feed" target="_blank">{{ re['rating_num'] }}</a>)
                 </p>
                 <p style="margin: 0">
@@ -23,14 +23,14 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-8">
-                        <h3>Ingredients:</h3>
+                        <h3>Ingredients</h3>
                         <div class="single-faq" style="padding: 10px; margin: 10px 0">
                             <p style="margin: 5px 0">{{ re['ingredients'] }}</p>
                         </div>
                         <div class="single-faq" style="padding: 10px; margin: 10px 0">
                             <img src="{{ re['photo_url'] }}" alt="{{ re['name'] }}" style="object-fit:cover; height: 600px; width: 800px">
                         </div>
-                        <h3>Steps:</h3>
+                        <h3>Steps</h3>
                         <div class="single-faq" style="padding: 10px; margin: 10px 0">
                         {% for step in re['steps'].split('\n') %}
                             <p style="margin: 5px 0">{{ step }}</p>
@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <h3>You may also like:</h3>
+                        <h3>You May Like</h3>
                         {% for re in res %}
                         <div class="faq-sidebar-wrap" style="padding: 10px; margin: 10px 0">
                             <ul class="faq-sidebar">

@@ -89,7 +89,4 @@ class Index_name(dbbase):
 
         result = [x[0] for x in tfidf_scores]
         # print(len(tfidf_scores), len(result))
-        if len(result) == 0:
-            return 0, []
-        else:
-            return 1, result
+        return result

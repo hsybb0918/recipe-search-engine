@@ -13,6 +13,19 @@ dbsession, md, dbbase = dbconnect()
 class Recipes(dbbase):
     __table__ = Table('recipes', md, autoload=True)
 
+    def get_sort_list(self, rids, stype):
+        if stype == 0:  # most relevant
+            return dbsession.query(Recipes).filter(Recipes.id.in_(rids))
+        elif stype == 1:  # highest score
+            return dbsession.query(Recipes).filter(Recipes.id.in_(rids)).order_by(Recipes.rating_score.desc())
+        elif stype == 2:  # lowest score
+            return dbsession.query(Recipes).filter(Recipes.id.in_(rids)).order_by(Recipes.rating_score)
+        elif stype == 3:  # highest comments
+            return dbsession.query(Recipes).filter(Recipes.id.in_(rids)).order_by(Recipes.rating_num.desc())
+        elif stype == 4:  # lowest comments
+            return dbsession.query(Recipes).filter(Recipes.id.in_(rids)).order_by(Recipes.rating_num)
+
+
     def find_by_id(self, rid):
         """
 
@@ -28,7 +41,7 @@ class Recipes(dbbase):
         :param rids:
         :return:
         """
-        rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids)).order_by(Recipes.rating_num.desc()).limit(5)
+        rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids))
         return rows
 
     def find_by_ids_limited(self, rids, left, right):
@@ -39,16 +52,13 @@ class Recipes(dbbase):
         """
         if left != None and right == None:
             # left limit
-            rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids), Recipes.total_time >= left)\
-                .order_by(Recipes.rating_num.desc()).limit(5)
+            rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids), Recipes.total_time >= left)
         elif left == None and right != None:
             # right limit
-            rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids), Recipes.total_time <= right) \
-                .order_by(Recipes.rating_num.desc()).limit(5)
+            rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids), Recipes.total_time <= right)
         else:
             # both limit
-            rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids), Recipes.total_time >= left, Recipes.total_time <= right)\
-                .order_by(Recipes.rating_num.desc()).limit(5)
+            rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids), Recipes.total_time >= left, Recipes.total_time <= right)
         return rows
 
 

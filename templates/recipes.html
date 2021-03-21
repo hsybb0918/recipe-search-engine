@@ -50,9 +50,28 @@
             }
         });
 
+        $("#ingredients").on("keypress", function (event) {
+            if (event.keyCode == 13) {
+                $("#search").trigger("click");
+            }
+        });
+
+        $("#time_left").on("keypress", function (event) {
+            if (event.keyCode == 13) {
+                $("#search").trigger("click");
+            }
+        });
+
+        $("#time_right").on("keypress", function (event) {
+            if (event.keyCode == 13) {
+                $("#search").trigger("click");
+            }
+        });
+
         $("#search").on("click", function () {
             var keys = $("#keys").val();
             var is_title = $("#is_title").prop("checked");
+            var is_advance = $("#is_advance").prop("checked");
             var ingredients = $("#ingredients").val();
             var time_left = $("#time_left").val();
             var time_right = $("#time_right").val();
@@ -77,14 +96,15 @@
 
             if (!is_correct_time) {
                 alert("Please input the correct number!");
-            } else if (is_title && $.trim(keys).length == 0) {
-                alert("Please specify the title!");
+            } else if ((is_title || !is_advance) && $.trim(keys).length == 0) {
+                alert("Search for something you want!");
             } else if ($.trim(keys).length == 0 && $.trim(ingredients).length == 0) {
                 alert("Try to search something!");
             } else {
                 var data = {
                     data: JSON.stringify({
                         "is_title": is_title,
+                        "is_advance": is_advance,
                         "keys": keys,
                         "ingredients": ingredients,
                         "time_left": time_left,
@@ -137,7 +157,7 @@
                         data: {
                             keys: $("#keys").val()
                         },
-                        success: function(data){
+                        success: function (data) {
                             response($.map(data, function (item) {
                                 return item;
                             }))

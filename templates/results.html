@@ -1,93 +1,142 @@
 {% if res != None %}
     <div class="row">
         <div class="col-xs-2">
-            <div class="btn-group">
+            <div class="dropdown">
                 <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Most Relevant <span class="caret"></span>
+                    <span id="sort_text">Most Relevant</span>&nbsp;&nbsp;<span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Highest Score</a></li>
-                    <li><a href="#">Lowest Score</a></li>
-                    <li><a href="#">Highest Comments</a></li>
-                    <li><a href="#">Lowest Comments</a></li>
+                <ul class="dropdown-menu" id="sort_menu">
+                    <li><a stype="0" style="cursor: pointer">Most Relevant</a></li>
+                    <li><a stype="1" style="cursor: pointer">Highest Score</a></li>
+                    <li><a stype="2" style="cursor: pointer">Lowest Score</a></li>
+                    <li><a stype="3" style="cursor: pointer">Highest Comments</a></li>
+                    <li><a stype="4" style="cursor: pointer">Lowest Comments</a></li>
                 </ul>
             </div>
         </div>
         <div class="col-xs-10" style="text-align: right">
-            <span>23,000 recipes (0.850 seconds)</span>
+            <span>{{ count | big_number }} recipes ({{ '%0.3f' | format(run_time | float) }} seconds)</span>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <div style="height: 40px; display: flex; align-items: center">
-                <ul class="pagination pagination-sm" style="margin: auto">
-                    <li><a href="#" aria-label="previous">
-                            <span aria-hidden="true">&laquo;</span>
-                    </a></li>
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#">
-                            <span aria-hidden="true">&raquo;</span>
-                    </a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <div id="page_results">
 
-    <div class="row">
-        <div class="col-md-12">
-            {% for re in res %}
-            <div class="single-faq" style="margin: 10px 0; padding: 10px">
-                <div class="row">
-                    <div class="col-md-3">
-                        <a href="\recipe\{{ re['id'] }}" target="_blank">
-                            <img src="{{ re['photo_url'] }}" alt="{{ re['name'] }}" style="object-fit:cover; height: 180px; width: 1000px; max-height: 100%">
-                        </a>
-                    </div>
-                    <div class="col-md-9">
-                        <a href="\recipe\{{ re['id'] }}" target="_blank">
-                            <h2 style="margin: 15px 0">{{ re['name'] | truncate(60) }}</h2>
-                        </a>
-                        <p>
-                            <span style="display: flex; align-items: center;">
-                                <b>Rating Star:</b>&nbsp;<img src="/img/star{{ re['rating_star'] }}.png" width="100px" height="20px">
-                            </span>
-                            <b>Rating Score:</b>&nbsp;{{ '%0.2f'| format(re['rating_score']|float) }}
-                            (<a href="{{ re['record_url'] }}#activity-feed" target="_blank">{{ re['rating_num'] }}</a>)
-                            &nbsp;
-                            <b>Total Time:</b>&nbsp;{{ re['total_time'] }} mins
-                        </p>
-                        <p style="margin-bottom: 0">{{ re['description'] | truncate(230) }}</p>
-                    </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div style="height: 40px; display: flex; align-items: center">
+                    <ul id="pagination" class="pagination pagination-sm" style="margin: auto">
+
+                        {% if cur_page > 1 %}
+                            <li><a class="click_page" page="{{ cur_page - 1 }}" style="cursor:pointer"><span aria-hidden="true">&laquo;</span></a></li>
+                        {% endif %}
+
+                        {% for page in res.iter_pages(2, 2, 3, 2) %}
+                            {% if page %}
+                                <li {% if cur_page == page %} class="active" {% endif %}>
+                                    <a class="click_page" page="{{ page }}" style="cursor: pointer">{{ page }}</a>
+                                </li>
+                            {% else %}
+                                <li><a>...</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if cur_page < max_page %}
+                            <li><a class="click_page" page="{{ cur_page + 1 }}"  style="cursor:pointer"><span aria-hidden="true">&raquo;</span></a></li>
+                        {% endif %}
+
+                    </ul>
                 </div>
             </div>
-            {% endfor %}
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <div style="height: 40px; display: flex; align-items: center">
-                <ul class="pagination pagination-sm" style="margin: auto">
-                    <li><a href="#" aria-label="previous">
-                            <span aria-hidden="true">&laquo;</span>
-                    </a></li>
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#">
-                            <span aria-hidden="true">&raquo;</span>
-                    </a></li>
-                </ul>
+        <div class="row">
+            <div class="col-md-12">
+                {% for re in res.items %}
+                <div class="single-faq" style="margin: 10px 0; padding: 10px">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="\recipe\{{ re['id'] }}" target="_blank">
+                                <img src="{{ re['photo_url'] }}" alt="{{ re['name'] }}" style="object-fit:cover; height: 180px; width: 1000px; max-height: 100%">
+                            </a>
+                        </div>
+                        <div class="col-md-9">
+                            <a href="\recipe\{{ re['id'] }}" target="_blank">
+                                <h2 style="margin: 15px 0">{{ re['name'] | truncate(60) }}</h2>
+                            </a>
+                            <p>
+                                <span style="display: flex; align-items: center;">
+                                    <b>Rating Star:</b>&nbsp;<img src="/img/star{{ re['rating_star'] }}.png" width="100px" height="20px">
+                                </span>
+                                <b>Rating Score:</b>&nbsp;{{ '%0.2f' | format(re['rating_score'] | float) }}
+                                (<a href="{{ re['record_url'] }}#activity-feed" target="_blank">{{ re['rating_num'] }}</a>)
+                                &nbsp;
+                                <b>Total Time:</b>&nbsp;{{ re['total_time'] }} mins
+                            </p>
+                            <p style="margin-bottom: 0">{{ re['description'] | truncate(230) }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div style="height: 40px; display: flex; align-items: center">
+                    <ul class="pagination pagination-sm" style="margin: auto">
+                        <li><a href="#" aria-label="previous">
+                                <span aria-hidden="true">&laquo;</span>
+                        </a></li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">
+                                <span aria-hidden="true">&raquo;</span>
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <script>
+        $(".click_page").on("click", function () {
+            var page = $(this).attr("page");
+            $.ajax({
+                url: "/pagination",
+                type: "post",
+                data: {
+                    page: page
+                },
+                success: function (response) {
+                    $("#page_results").empty();
+                    $("#page_results").html(response);
+                }
+            });
+        });
+
+        $("#sort_menu a").on("click", function () {
+            var stype = $(this).attr("stype");
+
+            $("#sort_text").text($(this).text());
+
+            $.ajax({
+                url: "/pagination",
+                type: "post",
+                data: {
+                    page: 1,
+                    stype: stype
+                },
+                success: function (response) {
+                    $("#page_results").empty();
+                    $("#page_results").html(response);
+                }
+            });
+        });
+    </script>
 {% endif %}
 
 {% if res == None %}

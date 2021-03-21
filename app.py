@@ -1,4 +1,6 @@
 import json
+import math
+from time import time
 
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -19,6 +21,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data/se.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+global rid_list
+global sort_type
 
 @app.route('/', methods=['GET'])
 def index():
@@ -59,6 +63,12 @@ def recipes():
     basic search page
     :return:
     """
+    page = request.args.get('page')
+    page = 1 if page == None else int(page)
+    # user_parameter = request.form['parameter1'].lower()
+    # results = Item.query.filter(Item.parameter == user_parameter).paginate(page=page)
+
+    # return render_template("results.html", results=results)
     return render_template('recipes.html')
 
 
@@ -68,50 +78,100 @@ def results():
     search for results according to different conditions
     :return:
     """
-    rs = None
-    res = None
+    global rid_list
+    global sort_type
 
     data = json.loads(request.form.get('data'))
     is_title = data['is_title']
+    is_advance = data['is_advance']
     keys = data['keys']
     ingredients = data['ingredients']
     time_left = data['time_left']
     time_right = data['time_right']
 
-    print(is_title, keys, ingredients, time_left, time_right)
+    print(is_title, is_advance, keys, ingredients, time_left, time_right)
+
+    begin_time = time()
 
     if is_title is True:
-        flag, rs = Index_name().result_by_tfidf(keys)
-        if len(ingredients.strip()) != 0:
-            flag, rs_ing = Index_ingredient().result_by_bm25(ingredients)
-            rs = list(set(rs).intersection(set(rs_ing)))
+        rs = Index_name().result_by_tfidf(keys)
+        if is_advance and len(ingredients.strip()) != 0:
+            rs_ing = Index_ingredient().result_by_bm25(ingredients)
+            rs = [i for i in rs if i in rs_ing]
+            # rs = list(set(rs).intersection(set(rs_ing)))
 
     else:
         if len(keys.strip()) != 0:
-            flag, rs = Index_name_desc_ing().result_by_bm25(keys)
-            if len(ingredients.strip()) != 0:
-                flag, rs_ing = Index_ingredient().result_by_bm25(ingredients)
-                rs = list(set(rs).intersection(set(rs_ing)))
+            rs = Index_name_desc_ing().result_by_bm25(keys)
+            if is_advance and len(ingredients.strip()) != 0:
+                rs_ing = Index_ingredient().result_by_bm25(ingredients)
+                rs = [i for i in rs if i in rs_ing]
+                # rs = list(set(rs).intersection(set(rs_ing)))
         else:
-            flag, rs = Index_ingredient().result_by_bm25(ingredients)
+            rs = Index_ingredient().result_by_bm25(ingredients)
+
+    end_time = time()
+    run_time = end_time - begin_time
 
     if len(rs) == 0:
         return render_template('results.html', res=None)
     else:
         model = Recipes()
-        if len(time_left.strip()) != 0 and len(time_right.strip()) != 0:
+        if is_advance and len(time_left.strip()) != 0 and len(time_right.strip()) != 0:
+            if time_left > time_right:  # if the time limit is wrong
+                return render_template('results.html', res=None)
             # have both limit
             res = model.find_by_ids_limited(rs, int(time_left), int(time_right))
-        elif len(time_left.strip()) != 0 and len(time_right.strip()) == 0:
+        elif is_advance and len(time_left.strip()) != 0 and len(time_right.strip()) == 0:
             # have left limit
             res = model.find_by_ids_limited(rs, int(time_left), None)
-        elif len(time_left.strip()) == 0 and len(time_right.strip()) != 0:
+        elif is_advance and len(time_left.strip()) == 0 and len(time_right.strip()) != 0:
             # have right limit
             res = model.find_by_ids_limited(rs, None, int(time_right))
-        elif len(time_left.strip()) == 0 and len(time_right.strip()) == 0:
+        else:
             # no limit
             res = model.find_by_ids(rs)
-        return render_template('results.html', res=res)
+
+        list_res = []
+        for re in res:
+            list_res.append(re.to_json())
+        rid_list = []
+        for re in list_res:
+            rid_list.append(re['id'])
+
+        sort_type = 0
+
+        count = res.count()
+        res = res.paginate(per_page=5, page=1)
+        max_page = math.ceil(count / 5)
+        return render_template('results.html', res=res, count=count, run_time=run_time
+                               , max_page=max_page, cur_page=1)
+
+
+@app.route('/pagination', methods=['POST'])
+def pagination():
+    global rid_list
+    global sort_type
+
+    if 'stype' in request.form:
+        sort_type = int(request.form['stype'])
+
+    cur_page = int(request.form['page'])
+    res = Recipes().get_sort_list(rid_list, sort_type)
+
+    # update global list
+    list_res = []
+    for re in res:
+        list_res.append(re.to_json())
+    rid_list = []
+    for re in list_res:
+        rid_list.append(re['id'])
+
+    count = res.count()
+    res = res.paginate(per_page=5, page=cur_page)
+    max_page = math.ceil(count / 5)
+
+    return render_template('pagination.html', res=res, max_page=max_page, cur_page=cur_page)
 
 
 @app.route('/autocomplete', methods=['POST'])
@@ -132,6 +192,11 @@ def autocomplete():
         res.append(rs['name'])
 
     return jsonify(res)
+
+
+@app.template_filter('big_number')
+def big_number(number):
+    return format(format(number, ','))
 
 
 if __name__ == '__main__':

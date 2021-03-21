@@ -92,7 +92,4 @@ class Index_name_desc_ing(dbbase):
 
         result = [x[0] for x in bm25_scores]
         # print(len(bm25_scores), len(result))
-        if len(result) == 0:
-            return 0, []
-        else:
-            return 1, result
+        return result
