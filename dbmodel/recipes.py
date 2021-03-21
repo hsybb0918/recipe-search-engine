@@ -14,6 +14,12 @@ class Recipes(dbbase):
     __table__ = Table('recipes', md, autoload=True)
 
     def get_sort_list(self, rids, stype):
+        """
+        according to sort type, return the sorted recipes
+        :param rids:
+        :param stype:
+        :return:
+        """
         if stype == 0:  # most relevant
             return dbsession.query(Recipes).filter(Recipes.id.in_(rids))
         elif stype == 1:  # highest score
@@ -25,10 +31,9 @@ class Recipes(dbbase):
         elif stype == 4:  # lowest comments
             return dbsession.query(Recipes).filter(Recipes.id.in_(rids)).order_by(Recipes.rating_num)
 
-
     def find_by_id(self, rid):
         """
-
+        according to recipe id, return the recipe
         :param rid:
         :return:
         """
@@ -37,7 +42,7 @@ class Recipes(dbbase):
 
     def find_by_ids(self, rids):
         """
-
+        according to id list, return recipes in the list
         :param rids:
         :return:
         """
@@ -46,7 +51,7 @@ class Recipes(dbbase):
 
     def find_by_ids_limited(self, rids, left, right):
         """
-
+        according to time filtering, return the required recipes
         :param ids:
         :return:
         """
@@ -58,13 +63,13 @@ class Recipes(dbbase):
             rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids), Recipes.total_time <= right)
         else:
             # both limit
-            rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids), Recipes.total_time >= left, Recipes.total_time <= right)
+            rows = dbsession.query(Recipes).filter(Recipes.id.in_(rids), Recipes.total_time >= left,
+                                                   Recipes.total_time <= right)
         return rows
-
 
     def find_rand_recipes(self, num):
         """
-
+        every time return a number of random recipes
         :param num:
         :return:
         """
@@ -75,7 +80,7 @@ class Recipes(dbbase):
 
     def find_by_name_fuzzy(self, r_name):
         """
-
+        return recipes by fuzzy search
         :param r_name:
         :return:
         """
@@ -84,7 +89,7 @@ class Recipes(dbbase):
 
     def to_json(self):
         """
-
+        change the recipe to json data
         :return:
         """
         dict = self.__dict__

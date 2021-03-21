@@ -1,5 +1,5 @@
 # @File        : utils.py
-# @Description :
+# @Description : utils
 # @Time        : 07 March, 2021
 # @Author      : Cyan
 import os
@@ -21,7 +21,7 @@ def dbconnect():
 
 def get_stopwords():
     """
-
+    read file and return the stop words set
     :return:
     """
     basedir = os.path.abspath(os.path.dirname(__file__))

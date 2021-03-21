@@ -3,7 +3,7 @@
 
         <div class="sp" style="padding-top: 30px; padding-bottom: 30px">
             <div class="container">
-                <div class="row" style="margin-bottom: 5px" {# style="margin-bottom: 20px; display: flex; align-items: center" #}>
+                <div class="row" style="margin-bottom: 5px">
                     <div class="col-sm-12">
                         <div class="input-group">
                             <input id="keys" type="text" class="form-control" placeholder="I want to make...">
@@ -15,9 +15,9 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12" style="margin-bottom: 10px; display: flex; align-items: center">
-                        <input type="checkbox" id="is_title" style="margin: 0px" ><span width="400px">&nbsp;Only Search Title</span>
+                        <input type="checkbox" id="is_title" style="margin: 0" ><span width="400px">&nbsp;Only Search Title</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="checkbox" id="is_advance" style="margin: 0px"><span width="400px">&nbsp;Advanced Search</span>
+                        <input type="checkbox" id="is_advance" style="margin: 0"><span width="400px">&nbsp;Advanced Search</span>
                     </div>
                 </div>
                 <div id="advance">
@@ -37,7 +37,18 @@
         </div>
 
         <div class="faq-area-2 spb">
-            <div class="container" id="search-results"></div>
+            <div class="container" id="search-results">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h1>WELCOME! :)</h1>
+                        <h2>THIS IS OUR RECIPE SEARCH ENGINE.</h2>
+                        <p>Try to explore our different search functions. Hope you can find your favorite recipe here.</p>
+                    </div>
+                    <div class="col-sm-12">
+                        <img src="/img/result1.jpg" alt="">
+                    </div>
+                </div>
+            </div>
         </div>
 
 {% endblock %}

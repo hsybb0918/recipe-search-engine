@@ -13,7 +13,7 @@ class K_nearest(dbbase):
 
     def find_knn(self, rid):
         """
-
+        return the five nearest recipes by rid
         :param rid:
         :return:
         """

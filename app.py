@@ -21,8 +21,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data/se.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-global rid_list
-global sort_type
+global rid_list  # global value: result rid list
+global sort_type  # global value:  sort type
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -40,7 +41,7 @@ def about():
     route to about page
     :return:
     """
-    return render_template('about.html', error=True)
+    return render_template('about.html')
 
 
 @app.route('/recipe/<rid>', methods=['GET'])
@@ -63,12 +64,6 @@ def recipes():
     basic search page
     :return:
     """
-    page = request.args.get('page')
-    page = 1 if page == None else int(page)
-    # user_parameter = request.form['parameter1'].lower()
-    # results = Item.query.filter(Item.parameter == user_parameter).paginate(page=page)
-
-    # return render_template("results.html", results=results)
     return render_template('recipes.html')
 
 
@@ -78,9 +73,11 @@ def results():
     search for results according to different conditions
     :return:
     """
+    # get global value
     global rid_list
     global sort_type
 
+    # get request data
     data = json.loads(request.form.get('data'))
     is_title = data['is_title']
     is_advance = data['is_advance']
@@ -89,7 +86,7 @@ def results():
     time_left = data['time_left']
     time_right = data['time_right']
 
-    print(is_title, is_advance, keys, ingredients, time_left, time_right)
+    # print(is_title, is_advance, keys, ingredients, time_left, time_right)  # check
 
     begin_time = time()
 
@@ -111,8 +108,9 @@ def results():
             rs = Index_ingredient().result_by_bm25(ingredients)
 
     end_time = time()
-    run_time = end_time - begin_time
+    run_time = end_time - begin_time  # query time
 
+    # get the recipes from database
     if len(rs) == 0:
         return render_template('results.html', res=None)
     else:
@@ -132,6 +130,7 @@ def results():
             # no limit
             res = model.find_by_ids(rs)
 
+        # reset global value rid_list
         list_res = []
         for re in res:
             list_res.append(re.to_json())
@@ -139,17 +138,22 @@ def results():
         for re in list_res:
             rid_list.append(re['id'])
 
+        # reset global value sort_type
         sort_type = 0
 
         count = res.count()
         res = res.paginate(per_page=5, page=1)
         max_page = math.ceil(count / 5)
-        return render_template('results.html', res=res, count=count, run_time=run_time
-                               , max_page=max_page, cur_page=1)
+        return render_template('results.html', res=res, count=count, run_time=run_time, max_page=max_page, cur_page=1)
 
 
 @app.route('/pagination', methods=['POST'])
 def pagination():
+    """
+    ajax from pagination operation
+    :return:
+    """
+    # get global value
     global rid_list
     global sort_type
 
@@ -196,6 +200,11 @@ def autocomplete():
 
 @app.template_filter('big_number')
 def big_number(number):
+    """
+    custom filter for big number, 1000 -> 1,000
+    :param number:
+    :return:
+    """
     return format(format(number, ','))
 
 
